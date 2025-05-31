@@ -11,25 +11,30 @@ jobs:
     runs-on: windows-latest
 
     steps:
-    - uses: actions/checkout@v2
-    
+    - name: Check-out repository
+      uses: actions/checkout@v4 # Diperbarui dari @v2 ke @v4
+
     - name: Set up Python
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v5 # Diperbarui dari @v2 ke @v5
       with:
         python-version: '3.12'
-    
+
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
         pip install pyinstaller
-    
+
     - name: Build executable
       run: |
-        pyinstaller --noconfirm --onefile --windowed --icon=vidgen.ico --add-data "app;app" run.py
-    
+        # Pastikan 'run.py' adalah nama skrip utama Anda dan 'vidgen.ico' ada di root
+        # Format --add-data untuk PyInstaller adalah "SOURCE:DESTINATION_IN_EXE"
+        # Jika 'app' adalah folder di root dan Anda ingin itu ada sebagai folder 'app' di dalam exe:
+        pyinstaller --noconfirm --onefile --windowed --icon=vidgen.ico --add-data "app:app" run.py
+
     - name: Upload artifact
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4 # Diperbarui dari @v3 ke @v4
       with:
         name: AutoVideoGenerator
-        path: dist/run.exe
+        path: dist/run.exe # Pastikan ini adalah path yang benar ke executable Anda
+        if-no-files-found: error # Tambahkan ini untuk gagal jika file tidak ditemukan
