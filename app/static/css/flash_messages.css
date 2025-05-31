@@ -1,0 +1,35 @@
+/* Flash Messages */
+.flash-messages {
+    list-style-type: none;
+    padding: 0;
+    margin: 20px 0; /* Jarak dari elemen lain */
+    width: 100%; /* Ambil lebar penuh kontainer */
+}
+.flash-messages li {
+    padding: 12px 15px;
+    margin-bottom: 10px;
+    border-radius: 6px;
+    border: 1px solid transparent;
+    font-weight: 500;
+    color: #e0e0e0; /* Teks default terang */
+}
+.flash-messages .success { 
+    background-color: rgba(46, 204, 113, 0.2); /* Lebih transparan */
+    color: #2ecc71; 
+    border-color: rgba(46, 204, 113, 0.5);
+}
+.flash-messages .error { 
+    background-color: rgba(231, 76, 60, 0.2); 
+    color: #e74c3c; 
+    border-color: rgba(231, 76, 60, 0.5);
+}
+.flash-messages .warning { 
+    background-color: rgba(241, 196, 15, 0.2); 
+    color: #f1c40f; 
+    border-color: rgba(241, 196, 15, 0.5);
+}
+.flash-messages .info { 
+    background-color: rgba(52, 152, 219, 0.2); 
+    color: #3498db; 
+    border-color: rgba(52, 152, 219, 0.5);
+}

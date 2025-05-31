@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manajemen Template Prompt</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/global.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/management_pages.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/flash_messages.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Manajemen Template Prompt</h1>
+        <div class="action-links">
+            <a href="{{ url_for('main.index') }}" class="back-link">&laquo; Kembali ke Generator</a>
+            <a href="{{ url_for('prompt_templates.create_template') }}">Buat Template Baru</a>
+        </div>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <ul class="flash-messages">
+                {% for category, message in messages %}
+                    <li class="{{ category }}">{{ message }}</li>
+                {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
+
+        {% if templates %}
+            <ul class="template-list">
+                {% for template in templates %}
+                    <li class="template-item">
+                        <h3>{{ template.name }} {% if template.is_default %}(Default){% endif %}</h3>
+                        <p><strong>Tipe:</strong> {{ "Story Generation" if template.type == "story" else "Image Prompt Generation" }}</p>
+                        <p><strong>Deskripsi:</strong> {{ template.description if template.description else 'Tidak ada deskripsi.' }}</p>
+                        <p><strong>ID Template:</strong> <code>{{ template.id }}</code></p>
+                        <div class="template-actions">
+                            <a href="{{ url_for('prompt_templates.edit_template', template_id=template.id) }}" class="edit-link">Edit</a>
+                            {% if not template.is_default %}
+                            <form action="{{ url_for('prompt_templates.delete_template', template_id=template.id) }}" method="POST" style="display: inline;" onsubmit="return confirm('Apakah Anda yakin ingin menghapus template \'{{ template.name }}\'?');">
+                                <button type="submit" class="delete-button">Hapus</button>
+                            </form>
+                            {% else %}
+                                <button type="button" class="disabled-delete" disabled title="Template default tidak dapat dihapus">Hapus</button>
+                            {% endif %}
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p class="no-files">Belum ada template prompt yang dibuat. <a href="{{ url_for('prompt_templates.create_template') }}">Buat template pertama Anda!</a></p>
+        {% endif %}
+    </div>
+
+    <footer class="app-footer">
+        <p>Created by trialota</p>
+    </footer>
+</body>
+</html>

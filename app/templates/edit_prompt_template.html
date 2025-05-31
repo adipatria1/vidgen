@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ action }} Template Prompt</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/global.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/forms.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/management_pages.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/flash_messages.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>{{ action }} Template Prompt</h1>
+        <div class="action-links"> 
+            <a href="{{ url_for('prompt_templates.manage_templates') }}" class="back-link">&laquo; Kembali ke Manajemen Template</a>
+        </div>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <ul class="flash-messages">
+                {% for category, message in messages %}
+                    <li class="{{ category }}">{{ message }}</li>
+                {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
+
+        <form method="POST">
+            {% if template %}
+            <div class="form-group">
+                <label>ID Template:</label>
+                <input type="text" value="{{ template.id }}" readonly class="readonly-field">
+            </div>
+            {% endif %}
+            
+            <div class="form-group">
+                <label for="template_name">Nama Template:</label>
+                <input type="text" id="template_name" name="template_name" 
+                       value="{{ template.name if template else '' }}" required>
+            </div>
+            <div class="form-group">
+                <label for="template_type">Tipe Template:</label>
+                <select id="template_type" name="template_type" {% if template and template.is_default %}disabled{% endif %}>
+                    <option value="story" {% if template and template.type == 'story' %}selected{% endif %}>Story Generation</option>
+                    <option value="image" {% if template and template.type == 'image' %}selected{% endif %}>Image Prompt Generation</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="template_description">Deskripsi (Opsional):</label>
+                <textarea id="template_description" name="template_description" rows="2">{{ template.description if template and template.description else '' }}</textarea>
+            </div>
+            <div class="form-group">
+                <label for="template_content">Konten Template:</label>
+                {% if template and template.is_default %}
+                    <textarea id="template_content" name="template_content" readonly title="Konten template default tidak dapat diubah.">{{ template.content if template else '' }}</textarea>
+                    <small>Konten template default tidak dapat diubah dari antarmuka ini.</small>
+                {% else %}
+                    <textarea id="template_content" name="template_content" required>{{ template.content if template else '' }}</textarea>
+                {% endif %}
+            </div>
+            
+            <button type="submit" class="main-action-button">{{ action }} Template</button> 
+        </form>
+
+        <div class="placeholders-info">
+            <h4>Placeholder yang Tersedia untuk Konten Template:</h4>
+            <div id="story_placeholders" {% if template and template.type == 'image' %}style="display: none;"{% endif %}>
+                <h5>Story Generation Template:</h5>
+                <ul>
+                    <li><code>{expertise}</code> - Keahlian penulis (misal: 'seorang pendongeng ulung').</li>
+                    <li><code>{language}</code> - Bahasa output (misal: 'Indonesia', 'Inggris').</li>
+                    <li><code>{tone}</code> - Nada penulisan (misal: 'humoris', 'serius').</li>
+                    <li><code>{format_style}</code> - Format output teks (misal: 'narasi deskriptif').</li>
+                    <li><code>{target_words}</code> - Target jumlah kata untuk bagian cerita.</li>
+                    <li><code>{previous_summary_block}</code> - Ringkasan bagian sebelumnya (otomatis).</li>
+                    <li><code>{main_story_prompt}</code> - Prompt cerita utama dari pengguna.</li>
+                    <li><code>{character_description_block}</code> - Deskripsi karakter (otomatis).</li>
+                </ul>
+            </div>
+            <div id="image_placeholders" {% if not template or template.type != 'image' %}style="display: none;"{% endif %}>
+                <h5>Image Prompt Generation Template:</h5>
+                <ul>
+                    <li><code>{language}</code> - Bahasa output untuk prompt gambar.</li>
+                    <li><code>{current_chunk_text}</code> - Teks narasi saat ini.</li>
+                    <li><code>{previous_chunk_text}</code> - Teks narasi sebelumnya (untuk konteks).</li>
+                    <li><code>{character_description}</code> - Deskripsi karakter jika ada.</li>
+                    <li><code>{num_prompts}</code> - Jumlah prompt gambar yang diminta.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <footer class="app-footer">
+        <p>Created by trialota</p>
+    </footer>
+
+    <script>
+        document.getElementById('template_type').addEventListener('change', function() {
+            const storyPlaceholders = document.getElementById('story_placeholders');
+            const imagePlaceholders = document.getElementById('image_placeholders');
+            if (this.value === 'story') {
+                storyPlaceholders.style.display = 'block';
+                imagePlaceholders.style.display = 'none';
+            } else {
+                storyPlaceholders.style.display = 'none';
+                imagePlaceholders.style.display = 'block';
+            }
+        });
+    </script>
+</body>
+</html>

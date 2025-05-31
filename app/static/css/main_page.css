@@ -1,0 +1,141 @@
+/* Style khusus untuk index.html (Halaman Utama) */
+
+/* Pengaturan Efek Visual */
+.effects-settings-group fieldset {
+    border: 1px solid #44484e;
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 6px;
+}
+.effects-settings-group legend {
+    padding: 0 10px;
+    font-weight: 500;
+    color: #00c2cb; 
+}
+.probability-slider-group {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+}
+.probability-slider-group label {
+    min-width: 180px;
+    margin-right: 10px;
+    color: #b0b0b0; 
+    font-weight: normal; 
+}
+.probability-slider-group input[type="range"] {
+    flex-grow: 1;
+    margin-right: 10px;
+    accent-color: #00adb5;
+}
+.probability-slider-group output {
+    min-width: 40px;
+    text-align: right;
+    color: #e0e0e0;
+}
+.effects-settings-group fieldset small { 
+    display: block;
+    margin-bottom: 10px;
+    color: #aaa;
+}
+.effects-settings-group .form-group p { 
+    color: #c0c0c0;
+}
+.effects-settings-group .form-group p strong {
+    color: #e0e0e0;
+}
+
+
+/* Area Progress, Hasil, dan Laporan */
+/* Menggunakan selector yang lebih spesifik */
+body .container #progressArea, 
+body .container #resultsArea, 
+body .container #reportDisplayArea { 
+    margin-top: 30px;
+    padding: 20px;
+    border: 1px solid #3a3d42;
+    border-radius: 8px;
+    background-color: #25282c !important; /* Tetap gunakan !important untuk sementara */
+    color: #e0e0e0 !important; 
+}
+
+/* Styling Spesifik untuk #reportDisplayArea dengan selector lebih spesifik */
+body .container #reportDisplayArea h3 {
+    color: #00c2cb !important; 
+    margin-top: 0; 
+    margin-bottom: 15px; 
+    border-bottom: 1px solid #44484e; 
+    padding-bottom: 10px; 
+    font-size: 1.4em; 
+}
+body .container #reportDisplayArea ul {
+    list-style-type: none; 
+    padding-left: 0; 
+}
+body .container #reportDisplayArea li {
+    padding: 8px 0; 
+    border-bottom: 1px dotted #3a3d42; 
+    color: #c0c0c0 !important; 
+    display: flex; 
+    justify-content: space-between; 
+    flex-wrap: wrap; 
+}
+body .container #reportDisplayArea li:last-child {
+    border-bottom: none; 
+}
+body .container #reportDisplayArea li strong {
+    color: #e8e8e8 !important; 
+    margin-right: 10px; 
+    flex-shrink: 0; 
+}
+
+/* Status Messages */
+.status-messages {
+    min-height: 50px;
+    padding: 15px;
+    background-color: #1a1c20; 
+    border-radius: 6px;
+    margin-bottom: 15px;
+    white-space: pre-wrap;
+    color: #b0b0b0;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.9em;
+}
+
+/* Loader */
+.loader {
+    border: 5px solid #3a3d42; 
+    border-top: 5px solid #00adb5; 
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 1s linear infinite;
+    margin: 20px auto;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Kontainer Video Player */
+#videoPlayerContainer video {
+    max-width: 100%;
+    border-radius: 8px;
+    border: 1px solid #44484e;
+    background-color: #000;
+}
+
+/* Preview Cerita */
+.story-preview {
+    background-color: #1a1c20;
+    padding: 15px;
+    border-radius: 6px;
+    max-height: 250px;
+    overflow-y: auto;
+    white-space: pre-wrap;
+    border: 1px solid #3a3d42;
+    color: #c0c0c0;
+    font-family: 'Georgia', serif; 
+    line-height: 1.6;
+}

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manajemen File Generated</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/global.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/management_pages.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/flash_messages.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Manajemen File Generated</h1>
+        <div class="admin-links">
+             <a href="{{ url_for('main.index') }}" class="back-link">&laquo; Kembali ke Generator</a>
+        </div>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <ul class="flash-messages">
+                {% for category, message in messages %}
+                    <li class="{{ category }}">{{ message }}</li>
+                {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
+
+        {% if total_file_count > 0 %}
+        <div class="bulk-actions-container"> 
+            <h3>Aksi Massal</h3>
+            <p>Kelola semua file generated sekaligus.</p>
+            <form action="{{ url_for('file_manager.delete_all_generated_files_route') }}" method="POST" onsubmit="return confirm('PERINGATAN: Anda akan menghapus SEMUA file generated. Apakah Anda benar-benar yakin?');" style="display: inline-block; margin-right:10px;">
+                <button type="submit" class="delete-all-button">Hapus Semua File</button>
+            </form>
+            <a href="{{ url_for('file_manager.download_all_generated_files_route') }}" class="download-all-button">Unduh Semua File (ZIP)</a>
+        </div>
+        {% endif %}
+
+        {% if all_files %}
+            {% for category_name, files in all_files.items() %}
+                <div class="file-category">
+                    <h2>{{ category_name }} ({{ files|length }} file)</h2>
+                    {% if files %}
+                        <ul class="file-list">
+                            {% for file_item in files %}
+                                <li>
+                                    <span class="file-name">{{ file_item.name }}</span>
+                                    <form action="{{ url_for('file_manager.delete_file_route') }}" method="POST" style="display: inline;">
+                                        <input type="hidden" name="filename" value="{{ file_item.name }}">
+                                        <input type="hidden" name="subdir" value="{{ file_item.subdir }}">
+                                        <button type="submit" class="delete-button" onclick="return confirm('Apakah Anda yakin ingin menghapus file {{ file_item.name }}?');">Hapus</button>
+                                    </form>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p class="no-files">Tidak ada file dalam kategori ini.</p>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        {% else %}
+             {% if not total_file_count or total_file_count == 0 %} 
+                <p class="no-files">Tidak ada file generated yang ditemukan.</p>
+            {% endif %}
+        {% endif %}
+    </div> {# Penutup .container #}
+
+    {# --- Footer Baru --- #}
+    <footer class="app-footer">
+        <p>Created by trialota</p>
+    </footer>
+</body>
+</html>

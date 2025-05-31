@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hasil Video</title>
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/global.css') }}">
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/forms.css') }}">
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/main_page.css') }}">
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/flash_messages.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Hasil Video Anda</h1>
+        {% if video_url %}
+            <p>Video berhasil dibuat! Anda dapat menontonnya di bawah ini atau <a href="{{ video_url }}" download>mengunduhnya</a>.</p>
+            <video width="100%" max-width="720" controls>
+                <source src="{{ video_url }}" type="video/mp4">
+                Browser Anda tidak mendukung tag video.
+            </video>
+            {% if story_preview %}
+            <h2>Preview Teks Cerita</h2>
+            <div class="story-preview">
+                <pre>{{ story_preview }}</pre>
+            </div>
+            {% endif %}
+        {% else %}
+            <p>Maaf, terjadi kesalahan saat membuat video.</p>
+            {% if error_message %}
+            <p>Detail Error: {{ error_message }}</p>
+            {% endif %}
+        {% endif %}
+        <p><a href="{{ url_for('main.index') }}">Kembali ke Halaman Utama</a></p>
+    </div>
+</body>
+</html>

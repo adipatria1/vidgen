@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auto Video Generator</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/global.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/forms.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main_page.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/flash_messages.css') }}">
+    <style>
+        .drop-zone {
+            border: 2px dashed #00adb5;
+            border-radius: 8px;
+            padding: 25px;
+            text-align: center;
+            cursor: pointer;
+            background-color: #202327; 
+            color: #888;
+            margin-top: 10px;
+            transition: background-color 0.3s ease;
+        }
+        .drop-zone.dragover {
+            background-color: #00adb533; 
+            border-color: #00c2cb;
+            color: #00c2cb;
+        }
+        .drop-zone input[type="file"] {
+            display: none;
+        }
+        .drop-zone .drop-zone-text {
+            pointer-events: none; 
+        }
+         #file_list_display {
+            margin-top: 10px;
+            font-size: 0.9em;
+            color: #c0c0c0;
+        }
+        #file_list_display ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+        #file_list_display li {
+            background-color: #1a1c20;
+            padding: 5px 8px;
+            margin-bottom: 3px;
+            border-radius: 4px;
+            border: 1px solid #3a3d42;
+            display: flex; 
+            justify-content: space-between;
+            align-items: center;
+        }
+        .word-count-inputs {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        .word-count-inputs .form-group {
+            flex: 1;
+            margin-bottom: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Auto Video Generator</h1>
+        <div class="admin-links">
+            <a href="{{ url_for('prompt_templates.manage_templates') }}" class="manage-templates-link">Kelola Template Prompt</a>
+            <a href="{{ url_for('file_manager.manage_files') }}" class="manage-files-link">Kelola File Generated</a>
+        </div>
+        <p>Buat video narasi otomatis dari teks yang dihasilkan AI, dengan gambar dan suara AI.</p>
+
+        <form id="videoForm" enctype="multipart/form-data">
+            <h2>Konfigurasi Penyedia AI & Model</h2>
+            <div class="form-group">
+                <label for="ai_provider_select">Pilih Penyedia AI Narasi:</label>
+                <select id="ai_provider_select" name="ai_provider">
+                    <option value="gemini" selected>Gemini (Google)</option>
+                    <option value="pollinations">All In One AI (Tanpa API Key)</option>
+                </select>
+            </div>
+
+            <div id="gemini_api_key_section" class="form-group"> 
+                <label for="gemini_api_key">Gemini API Key:</label>
+                <input type="password" id="gemini_api_key" name="gemini_api_key" placeholder="Masukkan Gemini API Key Anda">
+            </div>
+            
+            <div id="gemini_model_selection_section" class="form-group">
+                <label for="gemini_model">Model Gemini untuk Teks:</label>
+                <select id="gemini_model" name="gemini_model">
+                    {% for model in gemini_models %}<option value="{{ model }}" {% if model == default_gemini_model %}selected{% endif %}>{{ model }}</option>{% endfor %}
+                </select>
+            </div>
+            <div id="pollinations_model_selection_section" class="form-group hidden-input">
+                <label for="pollinations_text_model">Model "All In One AI" untuk Teks:</label>
+                <select id="pollinations_text_model" name="pollinations_text_model">
+                    {% if pollinations_text_models %}
+                        {% for model in pollinations_text_models %}
+                        <option value="{{ model }}" {% if model == default_pollinations_text_model %}selected{% endif %}>{{ model }}</option>
+                        {% endfor %}
+                    {% else %}
+                        <option value="">Tidak ada model Pollinations tersedia.</option>
+                    {% endif %}
+                </select>
+            </div>
+            
+            <h2>Pengaturan Narasi Cerita</h2>
+            <div class="form-group">
+                <label for="narrative_source_select">Sumber Narasi:</label>
+                <select id="narrative_source_select" name="narrative_source">
+                    <option value="prompt" selected>Generate dari Prompt Teks</option>
+                    <option value="file">Unggah File Narasi (.txt)</option>
+                </select>
+            </div>
+
+            <div id="prompt_input_section" class="input-option">
+                <div class="form-group" id="prompt_template_id_section">
+                    <label for="prompt_template_id">Pilih Template Prompt Narasi:</label>
+                    <select id="prompt_template_id" name="prompt_template_id">
+                        {% if prompt_templates %}
+                            {% for template in prompt_templates %}
+                                {% if template.type == 'story' %}
+                                <option value="{{ template.id }}" {% if template.id == 'default-story-v1' %}selected{% endif %}>
+                                    {{ template.name }} {% if template.is_default %}(Default){% endif %}
+                                </option>
+                                {% endif %}
+                            {% endfor %}
+                        {% else %}
+                            <option value="">Tidak ada template. Buat dulu.</option>
+                        {% endif %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="story_prompt">Prompt Cerita Awal (dimasukkan ke template):</label>
+                    <textarea id="story_prompt" name="story_prompt" rows="3" placeholder="Misalnya: Sebuah petualangan..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="num_parts">Jumlah Bagian Cerita:</label>
+                    <input type="number" id="num_parts" name="num_parts" value="{{ default_parts }}" min="1" max="10">
+                </div>
+                <div class="word-count-inputs">
+                    <div class="form-group">
+                        <label for="min_words_per_part">Target Kata Minimum per Bagian:</label>
+                        <input type="number" id="min_words_per_part" name="min_words_per_part" value="100" min="100" max="5000">
+                    </div>
+                    <div class="form-group">
+                        <label for="max_words_per_part">Target Kata Maksimum per Bagian:</label>
+                        <input type="number" id="max_words_per_part" name="max_words_per_part" value="150" min="100" max="5000">
+                    </div>
+                </div>
+                <div id="style_options_section">
+                    <div class="form-group">
+                        <label for="narrative_expertise">Keahlian Penulis:</label>
+                        <select id="narrative_expertise" name="narrative_expertise">
+                            {% for display_name, value_desc in narrative_expertise_options.items() %}<option value="{{ value_desc }}" {% if display_name == default_narrative_expertise %}selected{% endif %}>{{ display_name }}</option>{% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="narrative_tone">Nada Cerita:</label>
+                        <select id="narrative_tone" name="narrative_tone">
+                            {% for display_name, value_desc in narrative_tone_options.items() %}<option value="{{ value_desc }}" {% if display_name == default_narrative_tone %}selected{% endif %}>{{ display_name }}</option>{% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="narrative_format">Format Output:</label>
+                        <select id="narrative_format" name="narrative_format">
+                            {% for display_name, value_desc in narrative_format_options.items() %}<option value="{{ value_desc }}" {% if display_name == default_narrative_format %}selected{% endif %}>{{ display_name }}</option>{% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="narrative_language">Bahasa Narasi:</label>
+                        <select id="narrative_language" name="narrative_language">
+                            {% for display_name, lang_value in narrative_language_options.items() %}<option value="{{ lang_value }}" {% if display_name == default_narrative_language %}selected{% endif %}>{{ display_name }}</option>{% endfor %}
+                        </select>
+                    </div>
+                </div>
+                 <small>Jika mengunggah file, semua opsi di atas (kecuali deskripsi karakter) akan diabaikan.</small>
+            </div>
+            
+            <div id="file_upload_section" class="input-option hidden-input"> 
+                <div class="form-group">
+                    <label for="narrative_file_drop_zone">Unggah File Narasi (.txt):</label>
+                    <div id="narrative_file_drop_zone" class="drop-zone">
+                        <input type="file" id="narrative_file" name="narrative_file" accept=".txt" multiple>
+                        <span class="drop-zone-text">Seret & lepas file di sini, atau klik untuk memilih file.</span>
+                    </div>
+                    <div id="file_list_display"></div>
+                    <small>Anda bisa memilih beberapa file .txt. Konten akan digabungkan.</small>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="character_description">Deskripsi Karakter Utama (Opsional):</label>
+                <textarea id="character_description" name="character_description" rows="2" placeholder="Misalnya: Ksatria muda..."></textarea>
+            </div>
+
+            <h2>Pengaturan Efek Visual Video</h2>
+            <div class="effects-settings-group">
+                <fieldset>
+                    <legend>Status Efek</legend>
+                    <div class="form-group">
+                        <input type="checkbox" id="effects_enabled" name="effects_enabled" value="true" {% if default_effects_enabled %}checked{% endif %}>
+                        <label for="effects_enabled" style="display: inline; font-weight: normal;">Aktifkan Efek Visual (Motion, Fade)</label> 
+                    </div>
+                </fieldset>
+                <fieldset id="effect_probabilities_fieldset" {% if not default_effects_enabled %}style="display:none;"{% endif %}>
+                    <legend>Probabilitas Efek Motion & Fade (Jika Efek Umum Aktif)</legend>
+                    <small>Fade In memiliki probabilitas sendiri. Sisa probabilitas dibagi untuk motion (Zoom In, Zoom Out, Statis).</small>
+                    
+                    <div class="form-group probability-slider-group">
+                        <label for="fade_probability">Fade In (%):</label>
+                        <input type="range" id="fade_probability" name="fade_probability" min="0" max="100" value="{{ default_fade_probability }}" oninput="this.nextElementSibling.value = this.value + '%'">
+                        <output>{{ default_fade_probability }}%</output>
+                    </div>
+                    <div class="form-group probability-slider-group">
+                        <label for="zoom_in_probability">Zoom In (%):</label>
+                        <input type="range" id="zoom_in_probability" name="zoom_in_probability" min="0" max="100" value="{{ default_zoom_in_probability }}" oninput="this.nextElementSibling.value = this.value + '%'">
+                        <output>{{ default_zoom_in_probability }}%</output>
+                    </div>
+                    <div class="form-group probability-slider-group">
+                        <label for="zoom_out_probability">Zoom Out (%):</label>
+                        <input type="range" id="zoom_out_probability" name="zoom_out_probability" min="0" max="100" value="{{ default_zoom_out_probability }}" oninput="this.nextElementSibling.value = this.value + '%'">
+                        <output>{{ default_zoom_out_probability }}%</output>
+                    </div>
+                    <div class="form-group probability-slider-group">
+                        <label for="static_probability">Statis (Tanpa Motion) (%):</label>
+                        <input type="range" id="static_probability" name="static_probability" min="0" max="100" value="{{ default_static_probability }}" oninput="this.nextElementSibling.value = this.value + '%'">
+                        <output>{{ default_static_probability }}%</output>
+                    </div>
+                    <div class="form-group">
+                        <p>Total Probabilitas Motion: <strong id="totalMotionProbability">0%</strong> (Idealnya 100%)</p>
+                    </div>
+                </fieldset>
+            </div>
+
+            <h2>Pengaturan Text-to-Speech</h2>
+             <div class="form-group">
+                <label for="tts_voice">Pilih Suara:</label>
+                <select id="tts_voice" name="tts_voice">
+                    {% for voice in pollinations_voices %}<option value="{{ voice }}" {% if voice == default_voice %}selected{% endif %}>{{ voice|capitalize }}</option>{% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="tts_max_retries">Jumlah Percobaan Ulang TTS (jika gagal, 0-5):</label>
+                <input type="number" id="tts_max_retries" name="tts_max_retries" value="{{ default_tts_max_retries }}" min="0" max="5">
+            </div>
+
+            <h2>Pengaturan Gambar</h2>
+            <div class="form-group">
+                <label for="image_prompt_template_id">Template Prompt Gambar:</label>
+                <select id="image_prompt_template_id" name="image_prompt_template_id">
+                    {% if prompt_templates %}
+                        {% for template in prompt_templates %}
+                            {% if template.type == 'image' %}
+                            <option value="{{ template.id }}" {% if template.id == 'default-image-v1' %}selected{% endif %}>
+                                {{ template.name }} {% if template.is_default %}(Default){% endif %}
+                            </option>
+                            {% endif %}
+                        {% endfor %}
+                    {% else %}
+                        <option value="">Tidak ada template. Buat dulu.</option>
+                    {% endif %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="image_model">Model Gambar:</label>
+                <select id="image_model" name="image_model">
+                    {% for model_img in pollinations_image_models %}<option value="{{ model_img }}" {% if model_img == default_image_model %}selected{% endif %}>{{ model_img }}</option>{% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="aspect_ratio">Aspek Rasio Gambar:</label>
+                <select id="aspect_ratio" name="aspect_ratio">
+                    {% for ratio in pollinations_aspect_ratios %}<option value="{{ ratio }}" {% if ratio == default_aspect_ratio %}selected{% endif %}>{{ ratio }}</option>{% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="image_max_retries">Jumlah Percobaan Ulang Gambar (jika gagal, 0-5):</label>
+                <input type="number" id="image_max_retries" name="image_max_retries" value="{{ default_image_max_retries }}" min="0" max="5">
+            </div>
+            <div class="form-group">
+                <label for="images_per_chunk_min">Min Gambar per Chunk (1-5):</label>
+                <input type="number" id="images_per_chunk_min" name="images_per_chunk_min" value="{{ images_per_paragraph_min }}" min="1" max="5">
+            </div>
+            <div class="form-group">
+                <label for="images_per_chunk_max">Max Gambar per Chunk (1-5, >= Min):</label>
+                <input type="number" id="images_per_chunk_max" name="images_per_chunk_max" value="{{ images_per_paragraph_max }}" min="1" max="5">
+            </div>
+            
+            <button type="submit" id="submitButton" class="main-action-button">Generate Video</button>
+        </form>
+
+        <div id="progressArea" style="margin-top: 30px;">
+            <h2>Status Proses</h2>
+            <div id="statusMessages" class="status-messages">Menunggu...</div>
+            <div class="loader" id="loader" style="display: none;"></div>
+        </div>
+        <div id="resultsArea" style="display: none; margin-top: 30px;">
+            <h2>Hasil Video</h2>
+            <p id="resultMessage"></p>
+            <div id="videoPlayerContainer"></div>
+            <h3>Preview Teks Cerita:</h3>
+            <div id="storyPreview" class="story-preview"></div>
+        </div>
+    </div> 
+
+    <footer class="app-footer">
+        <p>Created by trialota</p>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/setting_manager.js') }}"></script> 
+    <script src="{{ url_for('static', filename='js/show_conf_ai.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/index_page_logic.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script> 
+</body>
+</html>

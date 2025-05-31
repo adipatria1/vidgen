@@ -1,0 +1,56 @@
+Penyedia AI Narasi yang dipilih: pollinations
+
+--- TAHAP 1: MEMBACA NARASI DARI FILE UNGGAPAN ---
+File narasi bagian 'narasi.txt' disimpan di: C:\Users\adipa\Desktop\github\vidgen 1\app\static\generated_media\uploaded_narratives\narasi_d0e7a01fa6df4299a3729fcf6df6cc34.txt
+Narasi berhasil dibaca dan digabung dari file unggahan (Total Panjang: 1333 chars).
+
+--- TAHAP 2: MEMECAH NARASI MENJADI CHUNKS ---
+Total 3 chunks teks dibuat untuk diproses.
+
+Memproses chunk ke-1/3
+Memanggil API Pollinations TTS (Percobaan ke-1/2): https://text.pollinations.ai/Baca+text+ini+%3A+%22Setiap+malam%2C+suara+ketukan+terdengar+dari+kamar+nomor+7+di+penginapan+tua+di+pinggir+kota.+Kamar+...
+Audio berhasil disimpan di: C:\Users\adipa\Desktop\github\vidgen 1\app\static\generated_media\audio\tts_alloy_d8b5fa07d8b84a8d9ac976360e9ed41c.mp3 (setelah percobaan ke-1)
+  Audio untuk chunk ke-1 BERHASIL disimpan di: C:\Users\adipa\Desktop\github\vidgen 1\app\static\generated_media\audio\tts_alloy_d8b5fa07d8b84a8d9ac976360e9ed41c.mp3
+Menunggu 5 detik (API delay)...
+Meminta 1 prompt gambar dari Gemini (gemini-2.0-flash) untuk chunk: Setiap malam, suara ketukan terdengar dari kamar nomor 7 di penginapan tua di pinggir kota. Kamar it...
+Error saat menghasilkan teks dengan Gemini (gemini-2.0-flash): Your default credentials were not found. To set up Application Default Credentials, see https://cloud.google.com/docs/authentication/external/set-up-adc for more information.
+  Peringatan: Gagal membuat prompt gambar untuk chunk ke-1.
+Menunggu 1 detik (API delay)...
+
+Memproses chunk ke-2/3
+Memanggil API Pollinations TTS (Percobaan ke-1/2): https://text.pollinations.ai/Baca+text+ini+%3A+%22Pemilik+menolak+keras%2C+tapi+akhirnya+menyerah+setelah+dibayar+dua+kali+lipat.%0A%0APukul+00.17%2C+...
+Audio berhasil disimpan di: C:\Users\adipa\Desktop\github\vidgen 1\app\static\generated_media\audio\tts_alloy_123f82e7e9754d3e88b38b8bab5883f0.mp3 (setelah percobaan ke-1)
+  Audio untuk chunk ke-2 BERHASIL disimpan di: C:\Users\adipa\Desktop\github\vidgen 1\app\static\generated_media\audio\tts_alloy_123f82e7e9754d3e88b38b8bab5883f0.mp3
+Menunggu 5 detik (API delay)...
+Meminta 1 prompt gambar dari Gemini (gemini-2.0-flash) untuk chunk: Pemilik menolak keras, tapi akhirnya menyerah setelah dibayar dua kali lipat.
+
+Pukul 00.17, suara ke...
+  Dengan konteks chunk sebelumnya: Setiap malam, suara ketukan terdengar dari kamar nomor 7 di penginapan tua di pinggir kota. Kamar it...
+Error saat menghasilkan teks dengan Gemini (gemini-2.0-flash): Your default credentials were not found. To set up Application Default Credentials, see https://cloud.google.com/docs/authentication/external/set-up-adc for more information.
+  Peringatan: Gagal membuat prompt gambar untuk chunk ke-2.
+Menunggu 1 detik (API delay)...
+
+Memproses chunk ke-3/3
+Memanggil API Pollinations TTS (Percobaan ke-1/2): https://text.pollinations.ai/Baca+text+ini+%3A+%22Hanya+ada+catatan+di+meja%2C+tulisannya+goyah+dan+penuh+goresan%3A%0A%E2%80%9CDia+masih+di+sini%E2%8...
+Audio berhasil disimpan di: C:\Users\adipa\Desktop\github\vidgen 1\app\static\generated_media\audio\tts_alloy_5578465ad1bb4319b1c5a2da3c1d121c.mp3 (setelah percobaan ke-1)
+  Audio untuk chunk ke-3 BERHASIL disimpan di: C:\Users\adipa\Desktop\github\vidgen 1\app\static\generated_media\audio\tts_alloy_5578465ad1bb4319b1c5a2da3c1d121c.mp3
+Menunggu 5 detik (API delay)...
+Meminta 2 prompt gambar dari Gemini (gemini-2.0-flash) untuk chunk: Hanya ada catatan di meja, tulisannya goyah dan penuh goresan:
+“Dia masih di sini… matanya… hitam se...
+  Dengan konteks chunk sebelumnya: Pemilik menolak keras, tapi akhirnya menyerah setelah dibayar dua kali lipat.
+
+Pukul 00.17, suara ke...
+Error saat menghasilkan teks dengan Gemini (gemini-2.0-flash): Your default credentials were not found. To set up Application Default Credentials, see https://cloud.google.com/docs/authentication/external/set-up-adc for more information.
+  Peringatan: Gagal membuat prompt gambar untuk chunk ke-3.
+Menunggu 1 detik (API delay)...
+
+--- LAPORAN GENERASI MEDIA ---
+  Total chunks processed: 3
+  Audio generated successfully: 3
+  Audio generation failed: 0
+  Texts rewritten for tts: 0
+  Image sets with at least one image: 0
+  Image sets completely failed: 3
+  Total individual images generated successfully: 0
+  Total individual images attempted: 4
+  Total individual images failed: 4

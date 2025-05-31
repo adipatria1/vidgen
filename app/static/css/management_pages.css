@@ -1,0 +1,186 @@
+/* Style untuk halaman manajemen file dan template prompt */
+
+/* Kontainer Kategori File atau Item Template */
+.file-category, .template-item {
+    margin-bottom: 25px;
+    padding: 20px;
+    border: 1px solid #3a3d42;
+    border-radius: 8px;
+    background-color: #25282c; /* Warna latar belakang gelap */
+    color: #e0e0e0; /* Warna teks default terang */
+}
+.file-category h2, .template-item h3 { /* Judul kategori/template */
+    margin-top: 0;
+    border-bottom: 1px solid #44484e;
+    padding-bottom: 10px;
+    color: #00c2cb; /* Warna aksen untuk judul */
+}
+.template-item p { /* Deskripsi template */
+    word-break: break-all;
+    margin-right: 15px;
+    color: #c0c0c0; /* Warna teks paragraf di dalam item */
+    margin-top: 5px; 
+    margin-bottom: 5px;
+}
+.template-item p small { /* ID Template */
+    color: #888; 
+}
+
+/* Daftar File atau Template */
+.file-list, .template-list {
+    list-style-type: none;
+    padding-left: 0;
+}
+.file-list li, .template-list li {
+    padding: 10px 0;
+    border-bottom: 1px solid #33363a; /* Garis pemisah yang lebih halus */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap; 
+}
+.file-list li:last-child, .template-list li:last-child {
+    border-bottom: none;
+}
+.file-name { /* Nama file di halaman manajemen file */
+    word-break: break-all;
+    margin-right: 15px;
+    color: #c0c0c0;
+    flex-grow: 1; 
+}
+
+/* Tombol Aksi di Halaman Manajemen */
+.template-actions { /* Kontainer untuk tombol edit/hapus template */
+    margin-left: auto; 
+    flex-shrink: 0; 
+}
+.template-actions form {
+    display: inline-block; 
+    margin-left: 10px;
+}
+.template-actions form:first-child {
+    margin-left: 0;
+}
+
+
+.delete-button, .edit-link { /* Tombol hapus & edit */
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9em;
+    text-decoration: none;
+    transition: background-color 0.2s ease;
+}
+.delete-button { background-color: #e74c3c; }
+.edit-link { background-color: #3498db; display: inline-block; } 
+
+.delete-button:hover { background-color: #c0392b; }
+.edit-link:hover { background-color: #2980b9; }
+
+.disabled-delete { /* Tombol hapus yang nonaktif */
+    background-color: #555;
+    color: #999;
+    cursor: not-allowed;
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 0.9em;
+    border: none;
+}
+
+.action-links a { /* Tombol "Buat Template Baru" / "Buat File Baru" */
+    display: inline-block;
+    padding: 10px 15px;
+    background-color: #2ecc71; 
+    color: white;
+    text-decoration: none;
+    border-radius: 4px;
+    font-weight: 500;
+    transition: background-color 0.2s ease;
+}
+.action-links a:hover { background-color: #27ae60; }
+.action-links { margin-bottom: 20px; } 
+
+
+/* Kontainer Hapus Semua File */
+.delete-all-container {
+    margin: 25px 0;
+    padding: 20px;
+    background-color: rgba(231, 76, 60, 0.1); 
+    border: 1px solid #e74c3c;
+    border-radius: 8px;
+    text-align: center;
+}
+.delete-all-container p { color: #f0a0a0; margin-bottom: 15px; }
+.delete-all-button { 
+    padding: 12px 25px; 
+    font-size: 1em; 
+    background: #e74c3c; 
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+.delete-all-button:hover { background: #c0392b; }
+
+.no-files { /* Pesan jika tidak ada file */
+    color: #888;
+    font-style: italic;
+    padding: 10px 0;
+}
+
+/* Placeholder Info di Halaman Edit Template */
+.placeholders-info {
+    margin-top: 25px;
+    padding: 20px; 
+    background-color: #202327; /* Warna latar belakang gelap yang konsisten */
+    border: 1px solid #3a3d42;
+    border-radius: 8px; 
+    color: #b0b0b0; /* Warna teks default */
+}
+.placeholders-info h4 { 
+    margin-top: 0; 
+    color: #00c2cb; /* Warna aksen */
+    margin-bottom: 10px; 
+    padding-bottom: 8px; 
+    border-bottom: 1px solid #44484e; /* Garis bawah */
+}
+.placeholders-info ul { list-style-type: none; padding-left: 0; }
+.placeholders-info li { 
+    margin-bottom: 8px; 
+    font-size: 0.9em; 
+    color: #c0c0c0; /* Warna teks item list */
+    line-height: 1.6;
+}
+.placeholders-info code { 
+    background-color: #33363a; 
+    padding: 3px 6px; 
+    border-radius: 4px; 
+    color: #00e0e0; /* Warna kode lebih cerah */
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.95em;
+}
+.placeholders-info p small {
+    color: #999; 
+    display: block;
+    margin-top: 15px;
+}
+
+/* Responsif untuk halaman manajemen */
+@media (max-width: 600px) {
+    .file-list li form, .template-list li .template-actions {
+        margin-top: 8px;
+        width: 100%; 
+        display: flex; 
+        justify-content: flex-start;
+    }
+    .template-actions a, .template-actions button {
+        margin-left: 0; 
+        margin-right: 10px; 
+    }
+    .template-actions button.disabled-delete {
+        margin-right: 0; 
+    }
+}

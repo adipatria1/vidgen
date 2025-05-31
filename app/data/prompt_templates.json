@@ -1,0 +1,48 @@
+[
+    {
+        "id": "default-story-v1",
+        "name": "Default Story Generation V1",
+        "content": "Anda adalah {expertise}.\nTuliskan cerita ini dalam bahasa {language} dengan nada {tone} dalam format {format_style}.\nPENTING: Buat narasi sesuai dengan kebijakan konten Azure OpenAI. Hindari topik, bahasa, atau skenario yang mungkin melanggar kebijakan konten tersebut (misalnya, konten sensitif, kebencian, kekerasan eksplisit, dll.). Fokus pada cerita yang aman untuk umum.\nTuliskan bagian cerita ini dengan panjang yang sangat mendekati {target_words} kata. Upayakan agar jumlah kata tidak menyimpang lebih dari 10-15% dari target tersebut (boleh sedikit lebih atau kurang). Presisi jumlah kata adalah penting untuk bagian ini.\n\n{previous_summary_block}\nPrompt utama untuk bagian ini:\n{main_story_prompt}\n\n{character_description_block}\nSilakan tulis bagian cerita selanjutnya:",
+        "is_default": true,
+        "description": "Template standar untuk generasi cerita dengan berbagai opsi."
+    },
+    {
+        "id": "default-image-v1",
+        "name": "Default Image Generation V1",
+        "content": "Buatlah prompt gambar yang sangat deskriptif untuk AI image generator dalam bahasa {language}.\n\nBerdasarkan narasi berikut:\n\"\"\"\n{current_chunk_text}\n\"\"\"\n\nJika ada konteks sebelumnya:\n{previous_chunk_text}\n\nJika ada deskripsi karakter yang perlu dipertahankan:\n{character_description}\n\nBuat {num_prompts} prompt gambar yang berbeda. Setiap prompt harus:\n- Fokus pada aspek visual yang berbeda dari narasi\n- Berupa satu kalimat deskriptif yang kuat\n- Menggambarkan adegan dengan detail\n- Aman untuk umum dan mematuhi kebijakan konten\n- Konsisten dengan deskripsi karakter jika ada\n\nFormat output: Daftar bernomor, satu prompt per baris.",
+        "is_default": true,
+        "description": "Template standar untuk generasi prompt gambar dengan berbagai opsi."
+    },
+    {
+        "id": "cc93a8e6-2c6b-409c-8017-827b8f74a5f8",
+        "name": "coba narasi",
+        "content": "Anda adalah {expertise}.\r\nTuliskan cerita ini dalam bahasa {language} dengan nada {tone} dalam format {format_style}.\r\nPENTING: Buat narasi sesuai dengan kebijakan konten Azure OpenAI. Hindari topik, bahasa, atau skenario yang mungkin melanggar kebijakan konten tersebut (misalnya, konten sensitif, kebencian, kekerasan eksplisit, dll.). Fokus pada cerita yang aman untuk umum.\r\nTuliskan bagian cerita ini dengan panjang yang sangat mendekati {target_words} kata. Upayakan agar jumlah kata tidak menyimpang lebih dari 10-15% dari target tersebut (boleh sedikit lebih atau kurang). Presisi jumlah kata adalah penting untuk bagian ini.\r\n\r\n{previous_summary_block}\r\nPrompt utama untuk bagian ini:\r\n{main_story_prompt}\r\n\r\n{character_description_block}\r\nSilakan tulis bagian cerita selanjutnya:",
+        "description": "Coba prompt",
+        "is_default": false,
+        "type": "story"
+    },
+    {
+        "id": "ba4967fb-6371-4a99-acd2-a227e35bca48",
+        "name": "Coba Image",
+        "content": "Buatlah prompt gambar yang sangat deskriptif untuk AI image generator dalam bahasa {language}.\r\n\r\nBerdasarkan narasi berikut:\r\n\"\"\"\r\n{current_chunk_text}\r\n\"\"\"\r\n\r\nJika ada konteks sebelumnya:\r\n{previous_chunk_text}\r\n\r\nJika ada deskripsi karakter yang perlu dipertahankan:\r\n{character_description}\r\n\r\nBuat {num_prompts} prompt gambar yang berbeda. Setiap prompt harus:\r\n- Fokus pada aspek visual yang berbeda dari narasi\r\n- Berupa satu kalimat deskriptif yang kuat\r\n- Menggambarkan adegan dengan detail\r\n- Aman untuk umum dan mematuhi kebijakan konten\r\n- Konsisten dengan deskripsi karakter jika ada\r\n\r\nFormat output: Daftar bernomor, satu prompt per baris.",
+        "description": "Coba prompt image",
+        "is_default": false,
+        "type": "image"
+    },
+    {
+        "id": "b01ee237-ccee-41d6-90b6-b6e367b09d21",
+        "name": "tes story",
+        "content": "sadddd",
+        "description": "sadddd",
+        "is_default": false,
+        "type": "story"
+    },
+    {
+        "id": "69d23214-93ef-4cbd-a93a-94e797dba742",
+        "name": "tes image",
+        "content": "asfffffffff",
+        "description": "asada",
+        "is_default": false,
+        "type": "image"
+    }
+]
