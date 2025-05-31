@@ -1,0 +1,50 @@
+name: Build macOS Executable
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch: # Memungkinkan pemicuan manual
+
+jobs:
+  build-macos: # Nama job diubah untuk mencerminkan platform
+    runs-on: macos-latest # Menggunakan runner macOS terbaru
+
+    steps:
+    - name: Check-out repository
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.12' # Sesuaikan dengan versi Python Anda
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt # Pastikan requirements.txt Anda kompatibel dengan macOS
+        pip install pyinstaller
+
+    - name: Build macOS .app bundle
+      run: |
+        # Untuk macOS, --windowed akan membuat .app bundle
+        # PyInstaller akan meletakkan hasilnya di folder 'dist'
+        # Format --add-data "SOURCE:DESTINATION_IN_BUNDLE"
+        # Untuk ikon di macOS, format .icns lebih disukai.
+        # Jika vidgen.ico tidak berfungsi baik, Anda mungkin perlu mengonversinya ke .icns
+        pyinstaller --noconfirm --onefile --windowed --icon=vidgen.ico --add-data "app:app" --name "AutoVideoGenerator" run.py
+        # Opsi --name "AutoVideoGenerator" akan menghasilkan AutoVideoGenerator.app
+
+    - name: Prepare .app for Upload
+      run: |
+        # .app adalah sebuah direktori, jadi lebih baik di-zip sebelum diunggah
+        ditto -c -k --sequesterRsrc --keepParent dist/AutoVideoGenerator.app AutoVideoGenerator-macOS.zip
+        # 'ditto' adalah utilitas macOS yang baik untuk membuat arsip .app
+
+    - name: Upload macOS artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: AutoVideoGenerator-macOS # Nama artefak diubah
+        path: AutoVideoGenerator-macOS.zip # Mengunggah file .zip
+        if-no-files-found: error
